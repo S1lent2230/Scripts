@@ -1,0 +1,47 @@
+#!/bin/bash
+
+MSF_DIR="/opt/metasploit-framework"
+CONSOLE="msfconsole"
+VENOM="msfvenom"
+OPT=$1
+
+function check_dir()
+{
+    if [ -d ${MSF_DIR} ]; then
+        cd ${MSF_DIR}
+    else
+        echo -e "\n\033[31m[-]\033[37m Could not find the msf directory in /opt...\033[0m\n"
+        exit 1
+    fi
+}
+
+function check_binaries()
+{
+    if [ -f ${MSF_DIR}/${CONSOLE} ]; then
+        if [[ -f ${MSF_DIR}/${VENOM} ]]; then
+            echo "All good" > ~/.1
+        else
+            echo -e "\n\033[31m[-]\033[37m Could not find \"msfvenom\" in ${MSF_DIR}...\033[0m\n"
+            exit 1
+        fi
+    else
+        echo -e "\n\033[31m[-]\033[37m Could find \"msfconsole\" in ${MSF_DIR}...\033[0m\n"
+        exit 1
+    fi
+}
+
+function run()
+{
+    check_dir
+    check_binaries
+    
+    case ${OPT} in
+        "console")
+            sudo ./${CONSOLE} ;;
+        
+        "venom")
+            sudo ./${VENOM} ;;
+    esac
+}
+
+run
